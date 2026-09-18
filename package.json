@@ -1,0 +1,12 @@
+
+{
+  "name": "fuf-restaurant",
+  "version": "1.0.0",
+  "description": "FUF Restaurant Full Stack Application",
+  "private": true,
+  "scripts": {
+    "postinstall": "cd backend && npm install",
+    "start": "cd backend && npm start"
+  }
+}
+
