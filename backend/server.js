@@ -1,3 +1,4 @@
+
 const express = require("express");
 const dns = require("dns");
 
@@ -5,8 +6,7 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
-
+require("dotenv").config({ path: __dirname + "/.env" });
 const MenuItem = require("./models/MenuItem");
 const Order = require("./models/Order");
 const Admin = require("./models/Admin");
@@ -70,7 +70,6 @@ app.post("/api/admin/login", async (req, res) => {
             password
         } = req.body;
 
-
         if (!username || !password) {
 
             return res.status(400).json({
@@ -82,11 +81,9 @@ app.post("/api/admin/login", async (req, res) => {
 
         }
 
-
         const admin = await Admin.findOne({
             username: username.trim()
         });
-
 
         if (!admin) {
 
@@ -99,13 +96,11 @@ app.post("/api/admin/login", async (req, res) => {
 
         }
 
-
         const isPasswordCorrect =
             await bcrypt.compare(
                 password,
                 admin.password
             );
-
 
         if (!isPasswordCorrect) {
 
@@ -117,7 +112,6 @@ app.post("/api/admin/login", async (req, res) => {
             });
 
         }
-
 
         const token = jwt.sign(
 
@@ -134,7 +128,6 @@ app.post("/api/admin/login", async (req, res) => {
 
         );
 
-
         res.json({
 
             message: "Login successful",
@@ -150,7 +143,6 @@ app.post("/api/admin/login", async (req, res) => {
             }
 
         });
-
 
     } catch (error) {
 
@@ -226,18 +218,31 @@ app.post(
         } = req.body;
 
 
+        // =================================================
+        // VALIDATE MENU ITEM DATA
+        // =================================================
+
         if (
-            !name ||
-            !description ||
-            !price ||
-            !image ||
-            !category
+            typeof name !== "string" ||
+            !name.trim() ||
+
+            typeof description !== "string" ||
+            !description.trim() ||
+
+            !Number.isFinite(price) ||
+            price <= 0 ||
+
+            typeof image !== "string" ||
+            !image.trim() ||
+
+            typeof category !== "string" ||
+            !category.trim()
         ) {
 
             return res.status(400).json({
 
                 message:
-                    "All menu item fields are required"
+                    "All menu item fields must be valid"
 
             });
 
@@ -247,11 +252,15 @@ app.post(
         const newMenuItem =
             new MenuItem({
 
-                name,
-                description,
+                name: name.trim(),
+
+                description: description.trim(),
+
                 price,
-                image,
-                category
+
+                image: image.trim(),
+
+                category: category.trim()
 
             });
 
@@ -309,18 +318,31 @@ app.put(
         } = req.body;
 
 
+        // =================================================
+        // VALIDATE MENU ITEM DATA
+        // =================================================
+
         if (
-            !name ||
-            !description ||
-            !price ||
-            !image ||
-            !category
+            typeof name !== "string" ||
+            !name.trim() ||
+
+            typeof description !== "string" ||
+            !description.trim() ||
+
+            !Number.isFinite(price) ||
+            price <= 0 ||
+
+            typeof image !== "string" ||
+            !image.trim() ||
+
+            typeof category !== "string" ||
+            !category.trim()
         ) {
 
             return res.status(400).json({
 
                 message:
-                    "All menu item fields are required"
+                    "All menu item fields must be valid"
 
             });
 
@@ -333,11 +355,15 @@ app.put(
                 id,
 
                 {
-                    name,
-                    description,
+                    name: name.trim(),
+
+                    description: description.trim(),
+
                     price,
-                    image,
-                    category
+
+                    image: image.trim(),
+
+                    category: category.trim()
                 },
 
                 {
@@ -464,6 +490,10 @@ app.post("/api/orders", async (req, res) => {
         } = req.body;
 
 
+        // =================================================
+        // BASIC ORDER VALIDATION
+        // =================================================
+
         if (
             !customerName ||
             !phone ||
@@ -480,18 +510,37 @@ app.post("/api/orders", async (req, res) => {
             });
 
         }
+
+
+        // =================================================
+        // QUANTITY VALIDATION
+        // =================================================
+
         const invalidQuantity = items.some(item => {
-            return !Number.isInteger(item.quantity) || item.quantity < 1;
+
+            return (
+                !Number.isInteger(item.quantity) ||
+                item.quantity < 1
+            );
+
         });
 
+
         if (invalidQuantity) {
+
             return res.status(400).json({
-                message: "Each item quantity must be a positive integer"
+
+                message:
+                    "Each item quantity must be a positive integer"
+
             });
+
         }
 
 
-
+        // =================================================
+        // GET MENU ITEMS FROM DATABASE
+        // =================================================
 
         const menuItemIds =
             items.map(
@@ -523,6 +572,10 @@ app.post("/api/orders", async (req, res) => {
         }
 
 
+        // =================================================
+        // BUILD ORDER ITEMS
+        // =================================================
+
         const orderItems =
             items.map(item => {
 
@@ -553,6 +606,10 @@ app.post("/api/orders", async (req, res) => {
             });
 
 
+        // =================================================
+        // CALCULATE TOTAL ON SERVER
+        // =================================================
+
         const total =
             orderItems.reduce(
 
@@ -570,6 +627,10 @@ app.post("/api/orders", async (req, res) => {
 
             );
 
+
+        // =================================================
+        // CREATE ORDER
+        // =================================================
 
         const newOrder =
             new Order({
@@ -680,10 +741,6 @@ app.get(
             await Order.findById(id);
 
 
-        // =========================
-        // Order not found
-        // =========================
-
         if (!order) {
 
             return res.status(404).json({
@@ -696,10 +753,6 @@ app.get(
         }
 
 
-        // =========================
-        // Response
-        // =========================
-
         res.json(order);
 
 
@@ -710,10 +763,6 @@ app.get(
             error
         );
 
-
-        // =========================
-        // Invalid MongoDB ID
-        // =========================
 
         if (error.name === "CastError") {
 
@@ -758,9 +807,9 @@ app.patch(
         const { status } = req.body;
 
 
-        // =========================
-        // Allowed statuses
-        // =========================
+        // =================================================
+        // ALLOWED STATUSES
+        // =================================================
 
         const allowedStatuses = [
 
@@ -779,10 +828,6 @@ app.patch(
         ];
 
 
-        // =========================
-        // Check status
-        // =========================
-
         if (
             !status ||
             !allowedStatuses.includes(status)
@@ -800,9 +845,9 @@ app.patch(
         }
 
 
-        // =========================
-        // Update order
-        // =========================
+        // =================================================
+        // UPDATE ORDER
+        // =================================================
 
         const updatedOrder =
             await Order.findByIdAndUpdate(
@@ -821,10 +866,6 @@ app.patch(
             );
 
 
-        // =========================
-        // Order not found
-        // =========================
-
         if (!updatedOrder) {
 
             return res.status(404).json({
@@ -836,10 +877,6 @@ app.patch(
 
         }
 
-
-        // =========================
-        // Response
-        // =========================
 
         res.json({
 
@@ -885,3 +922,4 @@ app.patch(
     }
 
 });
+
