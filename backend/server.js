@@ -480,6 +480,17 @@ app.post("/api/orders", async (req, res) => {
             });
 
         }
+        const invalidQuantity = items.some(item => {
+            return !Number.isInteger(item.quantity) || item.quantity < 1;
+        });
+
+        if (invalidQuantity) {
+            return res.status(400).json({
+                message: "Each item quantity must be a positive integer"
+            });
+        }
+
+
 
 
         const menuItemIds =
