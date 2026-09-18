@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>FUF Restaurant</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+
+  <header class="navbar">
+
+    <div class="logo">
+      FUF
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+
+        <li>
+          <a href="index.html">الرئيسية</a>
+        </li>
+
+        <li>
+          <a href="#menu">قائمة الطعام</a>
+        </li>
+
+        <li>
+          <a href="about.html">من نحن</a>
+        </li>
+
+        <li>
+          <a href="contact.html">تواصل معنا</a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <!-- Cart -->
+
+    <button class="cart-button" onclick="openCart()">
+
+      🛒
+
+      <span id="cartCount">0</span>
+
+    </button>
+
+  </header>
+
+
+  <!-- ================= HERO SLIDER ================= -->
+
+  <section class="hero-slider">
+
+    <!-- SLIDE 1 -->
+
+    <div class="slide active">
+
+      <div class="slide-content">
+
+        <h1>
+          أهلاً بك في FUF Restaurant
+        </h1>
+
+        <p>
+          تجربة طعام استثنائية تجمع بين المذاق الفاخر والأجواء الراقية.
+        </p>
+
+        <a href="#menu" class="btn-primary">
+          اكتشف قائمتنا
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- SLIDE 2 -->
+
+    <div class="slide">
+
+      <div class="slide-content">
+
+        <h1>
+          مذاق يستحق التجربة
+        </h1>
+
+        <p>
+          أطباق مختارة بعناية ومحضرة بأجود المكونات.
+        </p>
+
+        <a href="#menu" class="btn-primary">
+          شاهد القائمة
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- SLIDE 3 -->
+
+    <div class="slide">
+
+      <div class="slide-content">
+
+        <h1>
+          لحظات لا تُنسى
+        </h1>
+
+        <p>
+          استمتع بتجربة مختلفة مع كل طبق.
+        </p>
+
+        <a href="#menu" class="btn-primary">
+          ابدأ تجربتك
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- Slider Controls -->
+
+    <button
+      class="slider-btn prev"
+      onclick="changeSlide(-1)"
+    >
+      ❮
+    </button>
+
+    <button
+      class="slider-btn next"
+      onclick="changeSlide(1)"
+    >
+      ❯
+    </button>
+
+
+    <!-- Dots -->
+
+    <div class="slider-dots">
+
+      <span
+        onclick="goToSlide(0)"
+        class="dot active"
+      ></span>
+
+      <span
+        onclick="goToSlide(1)"
+        class="dot"
+      ></span>
+
+      <span
+        onclick="goToSlide(2)"
+        class="dot"
+      ></span>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= SEARCH ================= -->
+
+  <section class="search-section">
+
+    <h2>
+      ابحث في قائمة الطعام
+    </h2>
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="ابحث عن طبق..."
+        onkeyup="searchProducts()"
+      >
+
+      <button onclick="searchProducts()">
+        🔎 بحث
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= MENU ================= -->
+
+  <main class="container">
+
+    <section id="menu">
+
+      <div class="section-title">
+
+        <h2>
+          قائمة الطعام
+        </h2>
+
+        <p>
+          اكتشف مجموعة من أطباقنا المختارة بعناية.
+        </p>
+
+      </div>
+
+
+      <!--
+        IMPORTANT:
+
+        المنتجات لن تكون مكتوبة هنا.
+
+        JavaScript سيجلبها من MongoDB
+        عن طريق:
+
+        GET /api/menu
+      -->
+
+      <div
+        class="products-grid"
+        id="productsGrid"
+      >
+
+        <div class="loading-menu">
+
+          <p>
+            جاري تحميل قائمة الطعام...
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= CART OVERLAY ================= -->
+
+  <div
+    id="cartOverlay"
+    class="cart-overlay"
+    onclick="closeCart()"
+  ></div>
+
+
+  <!-- ================= CART ================= -->
+
+  <aside
+    id="cartPopup"
+    class="cart-popup"
+  >
+
+    <div class="cart-header">
+
+      <h2>
+        🛒 طلبك
+      </h2>
+
+      <button onclick="closeCart()">
+        ✕
+      </button>
+
+    </div>
+
+
+    <!-- Cart Items -->
+
+    <div
+      id="cartItems"
+      class="cart-items"
+    >
+
+      <!--
+        Cart products will appear here
+      -->
+
+    </div>
+
+
+    <!-- Cart Footer -->
+
+    <div class="cart-footer">
+
+      <div class="cart-total">
+
+        <span>
+          الإجمالي
+        </span>
+
+        <strong id="cartTotal">
+          0 جنيه
+        </strong>
+
+      </div>
+
+
+      <button
+        class="checkout-btn"
+        onclick="checkout()"
+      >
+        إتمام الطلب
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ================= NOTIFICATION ================= -->
+
+  <div
+    id="notification"
+    class="notification"
+  >
+    تمت إضافة الطبق إلى طلبك 🛒
+  </div>
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer class="footer">
+
+    <p>
+      جميع الحقوق محفوظة © 2026 FUF Restaurant
+    </p>
+
+  </footer>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>

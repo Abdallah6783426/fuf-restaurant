@@ -1,0 +1,190 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            rgba(20, 24, 18, 0.9),
+            rgba(20, 24, 18, 0.95)
+        );
+
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.login-container {
+    width: 100%;
+    max-width: 430px;
+    padding: 20px;
+}
+
+
+.login-box {
+    background: #252b21;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 20px;
+
+    padding: 45px 35px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+
+.logo {
+    text-align: center;
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    letter-spacing: 8px;
+
+    color: #c8b27c;
+
+    margin-bottom: 15px;
+}
+
+
+h1 {
+    text-align: center;
+
+    font-size: 26px;
+
+    margin-bottom: 8px;
+}
+
+
+.subtitle {
+    text-align: center;
+
+    color: #aaa;
+
+    margin-bottom: 35px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #ddd;
+
+    font-size: 14px;
+}
+
+
+.form-group input {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    border-radius: 10px;
+
+    border: 1px solid #444;
+
+    background: #181c16;
+
+    color: #fff;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+
+.form-group input:focus {
+    border-color: #c8b27c;
+
+    box-shadow:
+        0 0 0 3px rgba(200, 178, 124, 0.1);
+}
+
+
+#loginButton {
+    width: 100%;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #c8b27c;
+
+    color: #171a14;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#loginButton:hover {
+    transform: translateY(-1px);
+
+    opacity: 0.9;
+}
+
+
+#loginButton:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+.login-message {
+    min-height: 22px;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+
+.login-message.error {
+    color: #ff7b7b;
+}
+
+
+.login-message.success {
+    color: #7be0a1;
+}
+
+
+@media (max-width: 500px) {
+
+    .login-box {
+        padding: 35px 25px;
+    }
+
+}
