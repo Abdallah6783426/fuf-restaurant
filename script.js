@@ -1,5 +1,4 @@
-const API_URL = "http://localhost:3000";
-
+const API_URL = "https://fuf-restaurant-api.bonto.run";
 
 /* ================================================= */
 /* ================= ESCAPE HTML =================== */
